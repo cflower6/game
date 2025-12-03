@@ -124,7 +124,7 @@ public class Player extends Entity {
                 if(spriteNum == 2) image = right2;
             default:
                 break;
-        };
+        }
 
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }

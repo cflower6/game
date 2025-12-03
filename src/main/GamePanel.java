@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -27,8 +28,6 @@ public class GamePanel extends JPanel implements Runnable {
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
 
     final int FPS = 60;
     final long NANOSECOND = 1000000000;
@@ -37,7 +36,10 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyHandler = new KeyHandler();
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
+    public AssetsSetter assetsSetter = new AssetsSetter(this);
     public Player player = new Player(this, keyHandler);
+    // prepare 10 slots for an object but can replace the objects on display
+    public SuperObject[] superObjects = new SuperObject[10];
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -51,6 +53,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
+    public void setupGame() {
+        assetsSetter.setObject();
+    }
+
     public void startGameThread() {
         // we instantiate this thread and then we pass in main.GamePanel
         gameThread = new Thread(this);
@@ -62,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
     // When we start the game thread it starts this run method
     @Override
     public void run() {
-        double drawInterval = NANOSECOND / FPS;
+        double drawInterval = (double) NANOSECOND / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -154,6 +160,14 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         // THINK OF THIS LIKE LAYERS
         tileM.draw(g2);
+
+        //object
+        for (SuperObject superObject : superObjects) {
+            if(superObject != null) {
+                superObject.draw(g, this);
+            }
+
+        }
 
         player.draw(g2);
 

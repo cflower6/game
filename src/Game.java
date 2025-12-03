@@ -18,7 +18,8 @@ public class Game {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
+        // call before game runs to load up and set objects
+        gamePanel.setupGame();
         gamePanel.startGameThread();
     }
 }
